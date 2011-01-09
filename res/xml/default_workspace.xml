@@ -79,8 +79,8 @@
         launcher:y="0" />
 
     <favorite
-        launcher:packageName="com.android.spare_parts"
-        launcher:className="com.android.spare_parts.SpareParts"
+        launcher:packageName="com.evervolv.EVParts"
+        launcher:className="com.evervolv.EVParts.SpareParts"
         launcher:screen="2"
         launcher:x="3"
         launcher:y="1" />
