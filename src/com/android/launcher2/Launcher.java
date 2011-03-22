@@ -121,6 +121,8 @@ public final class Launcher extends Activity
     private static final int REQUEST_PICK_APPWIDGET = 9;
     private static final int REQUEST_PICK_WALLPAPER = 10;
 
+    private static final int REQUEST_HOTSEAT_APPLICATION = 69;
+    
     static final String EXTRA_SHORTCUT_DUPLICATE = "duplicate";
 
     static final int SCREEN_COUNT = 5;
@@ -216,7 +218,11 @@ public final class Launcher extends Activity
     private Intent[] mHotseats = null;
     private Drawable[] mHotseatIcons = null;
     private CharSequence[] mHotseatLabels = null;
-
+    
+    private int mHotseatNumber = 1;
+    private int HOTSEAT_FARLEFT = 1;
+    private int HOTSEAT_FARRIGHT = 2;
+    
     private Context mContext;
     protected boolean mUseStockLauncher = false;
     
@@ -430,6 +436,26 @@ public final class Launcher extends Activity
                 mHotseatLabels = null;
             }
         }
+        try{
+            String mSeat2 = Settings.System.getString(getContentResolver(), 
+            		Settings.System.FARRIGHT_AB);
+            String mSeat3 = Settings.System.getString(getContentResolver(), 
+            		Settings.System.FARLEFT_AB);
+            
+            if (!mSeat2.equals(null)){
+            	mHotseatConfig[2] = mSeat2;
+            }
+            if (!mSeat3.equals(null)){
+            	mHotseatConfig[3] = mSeat3;
+            }
+
+            Log.d(TAG, "mSeat2: " +  mSeat2 +"  Actual: " + 
+            		Settings.System.getString(getContentResolver(), Settings.System.FARRIGHT_AB));
+            Log.d(TAG, "mSeat3: " +  mSeat3 +"  Actual: " + 
+            		Settings.System.getString(getContentResolver(), Settings.System.FARLEFT_AB));
+        } catch (Exception NullPointerException) {
+        	//TODO: Is this proper?
+        }
         
         PackageManager pm = getPackageManager();
         for (int i=0; i<mHotseatConfig.length; i++) {
@@ -595,9 +621,40 @@ public final class Launcher extends Activity
             if (appWidgetId != -1) {
                 mAppWidgetHost.deleteAppWidgetId(appWidgetId);
             }
+        } else if (requestCode == REQUEST_HOTSEAT_APPLICATION) {
+        	try {
+        		setHotseat(data);
+        	} catch (Exception NullPointerException) {
+        		//ToDo: This occurs when someone cancels the dialog.
+        	}
+
         }
     }
 
+    private void pickHotSeatShortcut(int hotseatNumber) {
+    	mHotseatNumber = hotseatNumber;
+        Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+        Intent pickIntent = new Intent(Intent.ACTION_PICK_ACTIVITY);
+        pickIntent.putExtra(Intent.EXTRA_INTENT, mainIntent);
+        startActivityForResult(pickIntent, REQUEST_HOTSEAT_APPLICATION);
+    }
+    
+    void setHotseat(Intent data) {
+        int hotseatNumber = mHotseatNumber;
+        if (hotseatNumber == HOTSEAT_FARLEFT) {
+            Settings.System.putString(getContentResolver(), Settings.System.FARLEFT_AB, data.toUri(0));
+            Log.d(TAG, "Left - " + Settings.System.getString(getContentResolver(), Settings.System.FARLEFT_AB));
+            loadHotseats();
+            setupViews();
+        } else if (hotseatNumber == HOTSEAT_FARRIGHT) {
+        	Settings.System.putString(getContentResolver(), Settings.System.FARRIGHT_AB, data.toUri(0));
+        	Log.d(TAG, "Right - " + Settings.System.getString(getContentResolver(), Settings.System.FARRIGHT_AB));
+        	loadHotseats();
+        	setupViews();
+        }
+    }
+    
     @Override
     protected void onResume() {
         super.onResume();
@@ -782,10 +839,12 @@ public final class Launcher extends Activity
 	        ImageView hotseatfarRight = (ImageView) findViewById(R.id.hotseat_farright);
 	        hotseatfarRight.setContentDescription(mHotseatLabels[2]);
 	        hotseatfarRight.setImageDrawable(mHotseatIcons[2]);
+	        hotseatfarRight.setOnLongClickListener(this);
 	
 	        ImageView hotseatfarLeft = (ImageView) findViewById(R.id.hotseat_farleft);
 	        hotseatfarLeft.setContentDescription(mHotseatLabels[3]);
 	        hotseatfarLeft.setImageDrawable(mHotseatIcons[3]);
+	        hotseatfarLeft.setOnLongClickListener(this);
 	        
         } else {
         	
@@ -1643,6 +1702,18 @@ public final class Launcher extends Activity
                     showPreviews(v);
                 }
                 return true;
+            case R.id.hotseat_farleft:
+            	Log.d(TAG, "LongPress: left");
+                mWorkspace.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS,
+                        HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
+            	pickHotSeatShortcut(HOTSEAT_FARLEFT);
+            	return true;
+            case R.id.hotseat_farright:
+            	Log.d(TAG, "LongPress: right");
+                mWorkspace.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS,
+                        HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
+            	pickHotSeatShortcut(HOTSEAT_FARRIGHT);
+            	return true;
         }
 
         if (isWorkspaceLocked()) {
