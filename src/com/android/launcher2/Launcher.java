@@ -222,6 +222,8 @@ public final class Launcher extends Activity
     private int mHotseatNumber = 1;
     private int HOTSEAT_FARLEFT = 1;
     private int HOTSEAT_FARRIGHT = 2;
+    private int HOTSEAT_LEFT = 3;
+    private int HOTSEAT_RIGHT = 4;
     
     private Context mContext;
     protected boolean mUseStockLauncher = false;
@@ -437,22 +439,23 @@ public final class Launcher extends Activity
             }
         }
         try{
-            String mSeat2 = Settings.System.getString(getContentResolver(), 
-            		Settings.System.FARRIGHT_AB);
-            String mSeat3 = Settings.System.getString(getContentResolver(), 
-            		Settings.System.FARLEFT_AB);
-            
-            if (!mSeat2.equals(null)){
-            	mHotseatConfig[2] = mSeat2;
+            if (!Settings.System.getString(getContentResolver(), Settings.System.LEFT_AB).equals(null)) {
+            	
+            	mHotseatConfig[0] = Settings.System.getString(getContentResolver(), Settings.System.LEFT_AB);
             }
-            if (!mSeat3.equals(null)){
-            	mHotseatConfig[3] = mSeat3;
+            if (!Settings.System.getString(getContentResolver(), Settings.System.RIGHT_AB).equals(null)){
+            	
+            	mHotseatConfig[1] = Settings.System.getString(getContentResolver(), Settings.System.RIGHT_AB);
+            }
+            if (!Settings.System.getString(getContentResolver(), Settings.System.FARRIGHT_AB).equals(null)){
+            	
+            	mHotseatConfig[2] = Settings.System.getString(getContentResolver(), Settings.System.FARRIGHT_AB);
+            }
+            if (!Settings.System.getString(getContentResolver(), Settings.System.FARLEFT_AB).equals(null)){
+            	
+            	mHotseatConfig[3] = Settings.System.getString(getContentResolver(), Settings.System.FARLEFT_AB);
             }
 
-            Log.d(TAG, "mSeat2: " +  mSeat2 +"  Actual: " + 
-            		Settings.System.getString(getContentResolver(), Settings.System.FARRIGHT_AB));
-            Log.d(TAG, "mSeat3: " +  mSeat3 +"  Actual: " + 
-            		Settings.System.getString(getContentResolver(), Settings.System.FARLEFT_AB));
         } catch (Exception NullPointerException) {
         	//TODO: Is this proper?
         }
@@ -644,12 +647,20 @@ public final class Launcher extends Activity
         int hotseatNumber = mHotseatNumber;
         if (hotseatNumber == HOTSEAT_FARLEFT) {
             Settings.System.putString(getContentResolver(), Settings.System.FARLEFT_AB, data.toUri(0));
-            Log.d(TAG, "Left - " + Settings.System.getString(getContentResolver(), Settings.System.FARLEFT_AB));
             loadHotseats();
             setupViews();
         } else if (hotseatNumber == HOTSEAT_FARRIGHT) {
         	Settings.System.putString(getContentResolver(), Settings.System.FARRIGHT_AB, data.toUri(0));
-        	Log.d(TAG, "Right - " + Settings.System.getString(getContentResolver(), Settings.System.FARRIGHT_AB));
+        	loadHotseats();
+        	setupViews();
+        } else if (hotseatNumber == HOTSEAT_RIGHT) {
+        	Settings.System.putString(getContentResolver(), Settings.System.RIGHT_AB, data.toUri(0));
+        	Log.d(TAG, "Right - " + Settings.System.getString(getContentResolver(), Settings.System.RIGHT_AB));
+        	loadHotseats();
+        	setupViews();
+        } else if (hotseatNumber == HOTSEAT_LEFT) {
+        	Settings.System.putString(getContentResolver(), Settings.System.LEFT_AB, data.toUri(0));
+        	Log.d(TAG, "Left - " + Settings.System.getString(getContentResolver(), Settings.System.LEFT_AB));
         	loadHotseats();
         	setupViews();
         }
@@ -827,14 +838,16 @@ public final class Launcher extends Activity
         
         ImageView hotseatLeft = (ImageView) findViewById(R.id.hotseat_left);
         ImageView hotseatRight = (ImageView) findViewById(R.id.hotseat_right);
-        
+
         if (!mUseStockLauncher) {       
         	
             hotseatLeft.setContentDescription(mHotseatLabels[0]);
             hotseatLeft.setImageDrawable(mHotseatIcons[0]);
-
+            hotseatLeft.setOnLongClickListener(this);
+            
             hotseatRight.setContentDescription(mHotseatLabels[1]);
             hotseatRight.setImageDrawable(mHotseatIcons[1]);
+            hotseatRight.setOnLongClickListener(this);
             
 	        ImageView hotseatfarRight = (ImageView) findViewById(R.id.hotseat_farright);
 	        hotseatfarRight.setContentDescription(mHotseatLabels[2]);
@@ -1702,14 +1715,22 @@ public final class Launcher extends Activity
                     showPreviews(v);
                 }
                 return true;
+            case R.id.hotseat_left:
+                mWorkspace.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS,
+                        HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
+            	pickHotSeatShortcut(HOTSEAT_LEFT);
+            	return true;
+            case R.id.hotseat_right:
+                mWorkspace.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS,
+                        HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
+            	pickHotSeatShortcut(HOTSEAT_RIGHT);
+            	return true;
             case R.id.hotseat_farleft:
-            	Log.d(TAG, "LongPress: left");
                 mWorkspace.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS,
                         HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
             	pickHotSeatShortcut(HOTSEAT_FARLEFT);
             	return true;
             case R.id.hotseat_farright:
-            	Log.d(TAG, "LongPress: right");
                 mWorkspace.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS,
                         HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
             	pickHotSeatShortcut(HOTSEAT_FARRIGHT);
