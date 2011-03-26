@@ -906,6 +906,9 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
                 final int whichScreen = (mScrollX + (screenWidth / 2)) / screenWidth;
                 final float scrolledPos = (float) mScrollX / screenWidth;
                 
+                final int velocityY = (int) velocityTracker.getYVelocity(mActivePointerId);
+                
+                Log.d(TAG, Integer.toString(velocityY));
                 if (velocityX > SNAP_VELOCITY && mCurrentScreen > 0) {
                     // Fling hard enough to move left.
                     // Don't fling across more than one screen at a time.
@@ -918,6 +921,16 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
                     final int bound = scrolledPos > whichScreen ?
                             mCurrentScreen + 1 : mCurrentScreen;
                     snapToScreen(Math.max(whichScreen, bound), velocityX, true);
+                } else if (velocityY > 150) {
+                	//Fling down
+                	if (Launcher.dockPanel.isOpen) {
+                		Launcher.dockPanel.close();
+                	}
+                } else if (velocityY < -150) {
+                	//Fling up
+                	if (!Launcher.dockPanel.isOpen) {
+                		Launcher.dockPanel.open();
+                	}
                 } else {
                     snapToScreen(whichScreen, 0, true);
                 }

@@ -27,7 +27,7 @@ public class DockPanel extends LinearLayout {
 	private DockPosition position;
 	private int contentLayoutId;
 	private int handleButtonDrawableId;
-	private Boolean isOpen;
+	public Boolean isOpen;
 	private Boolean animationRunning;
 	private FrameLayout contentPlaceHolder;
 	private ImageButton toggleButton;

@@ -228,6 +228,8 @@ public final class Launcher extends Activity
     private Context mContext;
     protected boolean mUseStockLauncher = false;
     
+    public static DockPanel dockPanel;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -825,6 +827,8 @@ public final class Launcher extends Activity
         ((View) mAllAppsGrid).setFocusable(false); 
 
         mWorkspace = (Workspace) dragLayer.findViewById(R.id.workspace);
+        dockPanel = (DockPanel) dragLayer.findViewById(R.id.bottom_dock);
+        
         final Workspace workspace = mWorkspace;
         workspace.setHapticFeedbackEnabled(false);
 
