@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	      xmlns:launcher="http://schemas.android.com/apk/res/com.android.launcher"
+	      android:orientation="horizontal" 
+	      android:layout_width="fill_parent"
+	      android:background="@drawable/buttonbar_bg"
+	      android:layout_height="100.0px">
+    <RelativeLayout
+        android:id="@+id/all_apps_button_cluster"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/button_bar_height"
+        android:layout_gravity="bottom|center_horizontal"
+        android:paddingTop="2dip"
+    >
+
+        <com.android.launcher2.HandleView
+            style="@style/HotseatButton"
+            android:id="@+id/all_apps_button"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/all_apps_button"
+            launcher:direction="horizontal"
+        />
+
+        <ImageView
+            android:id="@+id/hotseat_left"
+            style="@style/HotseatButton.Left"
+            android:layout_toLeftOf="@id/all_apps_button"
+            android:onClick="launchHotSeat"
+        />
+
+        <ImageView
+            android:id="@+id/hotseat_farleft"
+            style="@style/HotseatButton.farLeft"
+            android:layout_toLeftOf="@id/hotseat_left"
+            android:onClick="launchHotSeat"
+        />
+
+        <ImageView
+            android:id="@+id/hotseat_right"
+            style="@style/HotseatButton.Right"
+            android:layout_toRightOf="@id/all_apps_button"
+            android:onClick="launchHotSeat"
+        />
+
+        <ImageView
+            android:id="@+id/hotseat_farright"
+            style="@style/HotseatButton.farRight"
+            android:layout_toRightOf="@id/hotseat_right"
+            android:onClick="launchHotSeat" 
+	/>
+
+    </RelativeLayout>
+</LinearLayout>

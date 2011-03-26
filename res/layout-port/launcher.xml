@@ -17,7 +17,7 @@
 <com.android.launcher2.DragLayer
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:launcher="http://schemas.android.com/apk/res/com.android.launcher"
-
+    xmlns:ma="http://com.android.launcher2"
     android:id="@+id/drag_layer"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -39,6 +39,15 @@
                 
     </com.android.launcher2.Workspace>
 
+	<com.android.launcher2.DockPanel
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content"
+		android:layout_gravity="bottom" 
+		ma:dockPosition="bottom"
+		ma:contentLayoutId="@layout/dockpanel_horizontal_content"
+		ma:handleButtonDrawableResourceId="@drawable/bottom_dock_handle" 
+	/>
+
     <com.android.launcher2.DeleteZone
         android:id="@+id/delete_zone"
         android:layout_width="@dimen/delete_zone_size"
@@ -50,57 +59,5 @@
         android:visibility="invisible"
         launcher:direction="horizontal"
     />
-
-    <RelativeLayout
-        android:id="@+id/all_apps_button_cluster"
-        android:layout_width="fill_parent"
-        android:layout_height="@dimen/button_bar_height"
-        android:layout_gravity="bottom|center_horizontal"
-        android:paddingTop="2dip"
-    >
-
-        <com.android.launcher2.HandleView
-            style="@style/HotseatButton"
-            android:id="@+id/all_apps_button"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            android:src="@drawable/all_apps_button"
-	    android:background="@drawable/hotseat_ev_bg"
-            launcher:direction="horizontal"
-        />
-
-        <ImageView
-            android:id="@+id/hotseat_farleft"
-            style="@style/HotseatButton.farLeft"
-            android:layout_toLeftOf="@id/hotseat_left"
-            android:onClick="launchHotSeat"
-	    android:background="@drawable/hotseat_ev_bg"
-        />
-
-        <ImageView
-            android:id="@+id/hotseat_left"
-            style="@style/HotseatButton.Left"
-            android:layout_toLeftOf="@id/all_apps_button"
-            android:onClick="launchHotSeat"
-	    android:background="@drawable/hotseat_ev_bg"
-        />
-
-        <ImageView
-            android:id="@+id/hotseat_right"
-            style="@style/HotseatButton.Right"
-            android:layout_toRightOf="@id/all_apps_button"
-            android:onClick="launchHotSeat"
-	    android:background="@drawable/hotseat_ev_bg"
-        />
-
-        <ImageView
-            android:id="@+id/hotseat_farright"
-            style="@style/HotseatButton.farRight"
-            android:layout_toRightOf="@id/hotseat_right"
-            android:onClick="launchHotSeat"
-            android:background="@drawable/hotseat_ev_bg"    
-	/>
-
-    </RelativeLayout>
 
 </com.android.launcher2.DragLayer>
