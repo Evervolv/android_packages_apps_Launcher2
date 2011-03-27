@@ -91,7 +91,9 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
     
     private final static int TOUCH_STATE_REST = 0;
     private final static int TOUCH_STATE_SCROLLING = 1;
-
+    private final static int TOUCH_SWIPE_DOWN_GESTURE = 2;
+    private final static int TOUCH_SWIPE_UP_GESTURE = 3;
+    
     private int mTouchState = TOUCH_STATE_REST;
 
     private OnLongClickListener mLongClickListener;
@@ -688,13 +690,20 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
                 
                 if (xMoved || yMoved) {
                     
-                    if (xMoved) {
+                	if (xDiff > yDiff) {
                         // Scroll if the user moved far enough along the X axis
                         mTouchState = TOUCH_STATE_SCROLLING;
                         mLastMotionX = x;
                         mTouchX = mScrollX;
                         mSmoothingTime = System.nanoTime() / NANOTIME_DIV;
                         enableChildrenCache(mCurrentScreen - 1, mCurrentScreen + 1);
+                	} else if (yDiff > xDiff) {
+                    	// Only y axis movement. So may be a Swipe down or up gesture
+                    	if ((y - mLastMotionY) > 0){
+                    		if(Math.abs(y-mLastMotionY)>(touchSlop*2))mTouchState = TOUCH_SWIPE_DOWN_GESTURE;
+                    	}else{
+                    		if(Math.abs(y-mLastMotionY)>(touchSlop*2))mTouchState = TOUCH_SWIPE_UP_GESTURE;
+                    	}
                     }
                     // Either way, cancel any pending longpress
                     if (mAllowLongPress) {
@@ -921,19 +930,23 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
                     final int bound = scrolledPos > whichScreen ?
                             mCurrentScreen + 1 : mCurrentScreen;
                     snapToScreen(Math.max(whichScreen, bound), velocityX, true);
-                } else if (velocityY > 150) {
-                	//Fling down
-                	if (Launcher.dockPanel.isOpen) {
-                		Launcher.dockPanel.close();
-                	}
-                } else if (velocityY < -150) {
-                	//Fling up
-                	if (!Launcher.dockPanel.isOpen) {
-                		Launcher.dockPanel.open();
-                	}
                 } else {
                     snapToScreen(whichScreen, 0, true);
                 }
+            } 
+            if (mTouchState == TOUCH_SWIPE_DOWN_GESTURE) {
+            	Log.d(TAG, "Swipe Down");
+                if (Launcher.dockPanel.isOpen) {
+                	Launcher.dockPanel.close();
+                	invalidate();
+				}
+            } else if (mTouchState == TOUCH_SWIPE_UP_GESTURE) {
+            	Log.d(TAG, "Swipe Up");
+                if (!Launcher.dockPanel.isOpen) {
+                	Launcher.dockPanel.open();
+                	invalidate();
+                	
+				}
             }
             mTouchState = TOUCH_STATE_REST;
             mActivePointerId = INVALID_POINTER;
