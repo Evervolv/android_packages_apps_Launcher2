@@ -254,11 +254,9 @@ public final class Launcher extends Activity
         setWallpaperDimension();
         
         if (mUseStockLauncher) {
-        	Log.d(TAG, "Using stock Launcher");
         	setContentView(R.layout.launcher_stock);
         	NUM_HOTSEATS = 2;
         } else {
-        	Log.d(TAG, "Using Evervolv Launcher");
         	setContentView(R.layout.launcher);
         	NUM_HOTSEATS = 4;
         }
@@ -657,12 +655,10 @@ public final class Launcher extends Activity
         	setupViews();
         } else if (hotseatNumber == HOTSEAT_RIGHT) {
         	Settings.System.putString(getContentResolver(), Settings.System.RIGHT_AB, data.toUri(0));
-        	Log.d(TAG, "Right - " + Settings.System.getString(getContentResolver(), Settings.System.RIGHT_AB));
         	loadHotseats();
         	setupViews();
         } else if (hotseatNumber == HOTSEAT_LEFT) {
         	Settings.System.putString(getContentResolver(), Settings.System.LEFT_AB, data.toUri(0));
-        	Log.d(TAG, "Left - " + Settings.System.getString(getContentResolver(), Settings.System.LEFT_AB));
         	loadHotseats();
         	setupViews();
         }

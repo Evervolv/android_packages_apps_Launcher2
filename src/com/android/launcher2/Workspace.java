@@ -917,7 +917,6 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
                 
                 final int velocityY = (int) velocityTracker.getYVelocity(mActivePointerId);
                 
-                Log.d(TAG, Integer.toString(velocityY));
                 if (velocityX > SNAP_VELOCITY && mCurrentScreen > 0) {
                     // Fling hard enough to move left.
                     // Don't fling across more than one screen at a time.
@@ -935,13 +934,11 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
                 }
             } 
             if (mTouchState == TOUCH_SWIPE_DOWN_GESTURE) {
-            	Log.d(TAG, "Swipe Down");
                 if (Launcher.dockPanel.isOpen) {
                 	Launcher.dockPanel.close();
                 	invalidate();
 				}
             } else if (mTouchState == TOUCH_SWIPE_UP_GESTURE) {
-            	Log.d(TAG, "Swipe Up");
                 if (!Launcher.dockPanel.isOpen) {
                 	Launcher.dockPanel.open();
                 	invalidate();
