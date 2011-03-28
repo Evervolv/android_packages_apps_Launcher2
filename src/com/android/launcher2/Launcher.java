@@ -457,6 +457,7 @@ public final class Launcher extends Activity
             }
 
         } catch (Exception NullPointerException) {
+        	Log.d(TAG, "NullPointerException: loadHotseats()");
         	//TODO: Is this proper?
         }
         
@@ -588,8 +589,16 @@ public final class Launcher extends Activity
 
         // For example, the user would PICK_SHORTCUT for "Music playlist", and we
         // launch over to the Music app to actually CREATE_SHORTCUT.
-
-        if (resultCode == RESULT_OK && mAddItemCellInfo != null) {
+        Log.d(TAG, Integer.toString(requestCode));
+        if (requestCode == REQUEST_HOTSEAT_APPLICATION) {
+	    	Log.d(TAG, "REQUEST_HOTSEAT_APPLICATION Recieved.");
+	    	try {
+	    		setHotseat(data);
+	    	} catch (Exception NullPointerException) {
+	    		Log.d(TAG, "NullPointerException: onActivityResult()");
+	    		//ToDo: This occurs when someone cancels the dialog.
+	    	}
+        } else if (resultCode == RESULT_OK && mAddItemCellInfo != null) {
             switch (requestCode) {
                 case REQUEST_PICK_APPLICATION:
                     completeAddApplication(this, data, mAddItemCellInfo);
@@ -616,6 +625,7 @@ public final class Launcher extends Activity
                     // We just wanted the activity result here so we can clear mWaitingForResult
                     break;
             }
+
         } else if ((requestCode == REQUEST_PICK_APPWIDGET ||
                 requestCode == REQUEST_CREATE_APPWIDGET) && resultCode == RESULT_CANCELED &&
                 data != null) {
@@ -624,13 +634,6 @@ public final class Launcher extends Activity
             if (appWidgetId != -1) {
                 mAppWidgetHost.deleteAppWidgetId(appWidgetId);
             }
-        } else if (requestCode == REQUEST_HOTSEAT_APPLICATION) {
-        	try {
-        		setHotseat(data);
-        	} catch (Exception NullPointerException) {
-        		//ToDo: This occurs when someone cancels the dialog.
-        	}
-
         }
     }
 
@@ -646,22 +649,28 @@ public final class Launcher extends Activity
     void setHotseat(Intent data) {
         int hotseatNumber = mHotseatNumber;
         if (hotseatNumber == HOTSEAT_FARLEFT) {
-            Settings.System.putString(getContentResolver(), Settings.System.FARLEFT_AB, data.toUri(0));
-            loadHotseats();
-            setupViews();
+        	Log.d(TAG, "FarLeft: " + data.toUri(0));
+            Settings.System.putString(getContentResolver(), 
+            		Settings.System.FARLEFT_AB, data.toUri(0));
+            
         } else if (hotseatNumber == HOTSEAT_FARRIGHT) {
-        	Settings.System.putString(getContentResolver(), Settings.System.FARRIGHT_AB, data.toUri(0));
-        	loadHotseats();
-        	setupViews();
+        	Log.d(TAG, "FarRight: " + data.toUri(0));
+        	Settings.System.putString(getContentResolver(), 
+        			Settings.System.FARRIGHT_AB, data.toUri(0));
+        	
         } else if (hotseatNumber == HOTSEAT_RIGHT) {
-        	Settings.System.putString(getContentResolver(), Settings.System.RIGHT_AB, data.toUri(0));
-        	loadHotseats();
-        	setupViews();
+        	Log.d(TAG, "Right: " + data.toUri(0));
+        	Settings.System.putString(getContentResolver(), 
+        			Settings.System.RIGHT_AB, data.toUri(0));
+        	
         } else if (hotseatNumber == HOTSEAT_LEFT) {
-        	Settings.System.putString(getContentResolver(), Settings.System.LEFT_AB, data.toUri(0));
-        	loadHotseats();
-        	setupViews();
+        	Log.d(TAG, "Left: " + data.toUri(0));
+        	Settings.System.putString(getContentResolver(), 
+        			Settings.System.LEFT_AB, data.toUri(0));
+        	
         }
+    	loadHotseats();
+    	setupViews();
     }
     
     @Override
