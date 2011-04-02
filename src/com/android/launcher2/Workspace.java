@@ -932,18 +932,19 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
                 } else {
                     snapToScreen(whichScreen, 0, true);
                 }
-            } 
-            if (mTouchState == TOUCH_SWIPE_DOWN_GESTURE) {
-                if (Launcher.dockPanel.isOpen) {
-                	Launcher.dockPanel.close();
-                	invalidate();
-				}
-            } else if (mTouchState == TOUCH_SWIPE_UP_GESTURE) {
-                if (!Launcher.dockPanel.isOpen) {
-                	Launcher.dockPanel.open();
-                	invalidate();
-                	
-				}
+            }
+            if (!mLauncher.mUseStockLauncher){
+	            if (mTouchState == TOUCH_SWIPE_DOWN_GESTURE) {
+	                if (Launcher.dockPanel.isOpen) {
+	                	Launcher.dockPanel.close();
+	                	invalidate();
+					}
+	            } else if (mTouchState == TOUCH_SWIPE_UP_GESTURE) {
+	                if (!Launcher.dockPanel.isOpen) {
+	                	Launcher.dockPanel.open();
+	                	invalidate();
+					}
+	            }
             }
             mTouchState = TOUCH_STATE_REST;
             mActivePointerId = INVALID_POINTER;
