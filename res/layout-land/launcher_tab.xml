@@ -31,11 +31,11 @@
         android:layout_height="match_parent"
         launcher:defaultScreen="2">
 
-        <include android:id="@+id/cell1" layout="@layout/workspace_screen_ev" />
-        <include android:id="@+id/cell2" layout="@layout/workspace_screen_ev" />
-        <include android:id="@+id/cell3" layout="@layout/workspace_screen_ev" />
-        <include android:id="@+id/cell4" layout="@layout/workspace_screen_ev" />
-        <include android:id="@+id/cell5" layout="@layout/workspace_screen_ev" />
+        <include android:id="@+id/cell1" layout="@layout/workspace_screen_tab" />
+        <include android:id="@+id/cell2" layout="@layout/workspace_screen_tab" />
+        <include android:id="@+id/cell3" layout="@layout/workspace_screen_tab" />
+        <include android:id="@+id/cell4" layout="@layout/workspace_screen_tab" />
+        <include android:id="@+id/cell5" layout="@layout/workspace_screen_tab" />
                 
     </com.android.launcher2.Workspace>
 

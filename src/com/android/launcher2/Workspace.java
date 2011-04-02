@@ -304,7 +304,7 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
         clearVacantCache();
         mCurrentScreen = Math.max(0, Math.min(currentScreen, getChildCount() - 1));
         
-        if (mLauncher.mUseStockLauncher){
+        if (mLauncher.mLauncherStyle == Launcher.LAUNCHER_STYLE_STOCK){
             mPreviousIndicator.setLevel(mCurrentScreen);
             mNextIndicator.setLevel(mCurrentScreen);
         }
@@ -459,7 +459,7 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
         } else if (mNextScreen != INVALID_SCREEN) {
             mCurrentScreen = Math.max(0, Math.min(mNextScreen, getChildCount() - 1));
             
-            if (mLauncher.mUseStockLauncher){
+            if (mLauncher.mLauncherStyle == Launcher.LAUNCHER_STYLE_STOCK){
                 mPreviousIndicator.setLevel(mCurrentScreen);
                 mNextIndicator.setLevel(mCurrentScreen);         	
             }
@@ -933,7 +933,7 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
                     snapToScreen(whichScreen, 0, true);
                 }
             }
-            if (!mLauncher.mUseStockLauncher){
+            if (!(mLauncher.mLauncherStyle == Launcher.LAUNCHER_STYLE_STOCK)){
 	            if (mTouchState == TOUCH_SWIPE_DOWN_GESTURE) {
 	                if (Launcher.dockPanel.isOpen) {
 	                	Launcher.dockPanel.close();
@@ -997,7 +997,7 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
 
         mNextScreen = whichScreen;
 
-        if (mLauncher.mUseStockLauncher) {
+        if (mLauncher.mLauncherStyle == Launcher.LAUNCHER_STYLE_STOCK) {
             mPreviousIndicator.setLevel(mNextScreen);
             mNextIndicator.setLevel(mNextScreen);
         }
