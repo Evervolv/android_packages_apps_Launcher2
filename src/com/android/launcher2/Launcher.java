@@ -48,6 +48,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.os.SystemClock;
@@ -245,7 +246,8 @@ public final class Launcher extends Activity
         mAppWidgetHost.startListening();
 
         if (PROFILE_STARTUP) {
-            android.os.Debug.startMethodTracing("/sdcard/launcher");
+            android.os.Debug.startMethodTracing(
+                    Environment.getExternalStorageDirectory() + "/launcher");
         }
         mContext = getApplicationContext();
         mUseStockLauncher = (Settings.System.getInt(mContext.getContentResolver(), Settings.System.USE_STOCK_LAUNCHER, 0) == 1);
@@ -254,10 +256,10 @@ public final class Launcher extends Activity
         setWallpaperDimension();
         
         if (mUseStockLauncher) {
-        	setContentView(R.layout.launcher_stock);
+        	setContentView(R.layout.launcher);
         	NUM_HOTSEATS = 2;
         } else {
-        	setContentView(R.layout.launcher);
+        	setContentView(R.layout.launcher_ev);
         	NUM_HOTSEATS = 4;
         }
         
@@ -2522,8 +2524,4 @@ public final class Launcher extends Activity
         mAllAppsGrid.dumpState();
         Log.d(TAG, "END launcher2 dump state");
     }
-    public boolean getLauncherType() {
-    	return mUseStockLauncher;
-    }
-    
 }

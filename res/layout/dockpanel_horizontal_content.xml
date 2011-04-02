@@ -4,7 +4,7 @@
 	      android:orientation="horizontal" 
 	      android:layout_width="fill_parent"
 	      android:background="@drawable/buttonbar_bg"
-	      android:layout_height="100.0px">
+	      android:layout_height="70dip">
     <RelativeLayout
         android:id="@+id/all_apps_button_cluster"
         android:layout_width="fill_parent"
@@ -14,7 +14,7 @@
     >
 
         <com.android.launcher2.HandleView
-            style="@style/HotseatButton"
+            style="@style/HotseatButtonEv"
             android:id="@+id/all_apps_button"
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
@@ -24,28 +24,28 @@
 
         <ImageView
             android:id="@+id/hotseat_left"
-            style="@style/HotseatButton.Left"
+            style="@style/HotseatButtonEv.Left"
             android:layout_toLeftOf="@id/all_apps_button"
             android:onClick="launchHotSeat"
         />
 
         <ImageView
             android:id="@+id/hotseat_farleft"
-            style="@style/HotseatButton.farLeft"
+            style="@style/HotseatButtonEv.farLeft"
             android:layout_toLeftOf="@id/hotseat_left"
             android:onClick="launchHotSeat"
         />
 
         <ImageView
             android:id="@+id/hotseat_right"
-            style="@style/HotseatButton.Right"
+            style="@style/HotseatButtonEv.Right"
             android:layout_toRightOf="@id/all_apps_button"
             android:onClick="launchHotSeat"
         />
 
         <ImageView
             android:id="@+id/hotseat_farright"
-            style="@style/HotseatButton.farRight"
+            style="@style/HotseatButtonEv.farRight"
             android:layout_toRightOf="@id/hotseat_right"
             android:onClick="launchHotSeat" 
 	/>

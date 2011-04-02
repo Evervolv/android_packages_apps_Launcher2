@@ -66,77 +66,76 @@
     </style>
 
     <style name="HotseatButton">
-        <item name="android:paddingLeft">5dip</item>
-        <item name="android:paddingRight">5dip</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">fill_parent</item>
-        <item name="android:scaleType">center</item>
-        <item name="android:focusable">true</item>
-        <item name="android:clickable">true</item>
-    </style>
-
-    <style name="HotseatButton.Left">
-        <item name="android:layout_marginLeft">2dip</item>
-        <item name="android:paddingLeft">5dip</item>
-        <item name="android:paddingRight">5dip</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">fill_parent</item>
-        <item name="android:scaleType">center</item>
-        <item name="android:focusable">true</item>
-        <item name="android:clickable">true</item>
-    </style>
-
-    <style name="HotseatButton.farLeft">
-        <item name="android:layout_marginLeft">2dip</item>
-        <item name="android:paddingLeft">5dip</item>
-        <item name="android:paddingRight">5dip</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">fill_parent</item>
-        <item name="android:scaleType">center</item>
-        <item name="android:focusable">true</item>
-        <item name="android:clickable">true</item>
-    </style>
-
-    <style name="HotseatButton.Right">
-        <item name="android:layout_marginRight">2dip</item>
-        <item name="android:paddingLeft">5dip</item>
-        <item name="android:paddingRight">5dip</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">fill_parent</item>
-        <item name="android:scaleType">center</item>
-        <item name="android:focusable">true</item>
-        <item name="android:clickable">true</item>
-    </style>
-
-    <style name="HotseatButton.farRight">
-        <item name="android:layout_marginRight">2dip</item>
-        <item name="android:paddingLeft">5dip</item>
-        <item name="android:paddingRight">5dip</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">fill_parent</item>
-        <item name="android:scaleType">center</item>
-        <item name="android:focusable">true</item>
-        <item name="android:clickable">true</item>
-    </style>
-
-    <style name="HotseatButton.Stock">
         <item name="android:paddingLeft">12dip</item>
         <item name="android:paddingRight">12dip</item>
-	<item name="android:background">@drawable/hotseat_bg_center</item>
+        <item name="android:background">@drawable/hotseat_bg_center</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">fill_parent</item>
         <item name="android:scaleType">center</item>
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
     </style>
-    <style name="HotseatButton.Left.Stock">
+    <style name="HotseatButton.Left">
         <item name="android:layout_marginLeft">4dip</item>
         <item name="android:background">@drawable/hotseat_bg_left</item>
     </style>
-    <style name="HotseatButton.Right.Stock">
+    <style name="HotseatButton.Right">
         <item name="android:layout_marginRight">4dip</item>
         <item name="android:background">@drawable/hotseat_bg_right</item>
     </style>
 
+    <style name="HotseatButtonEv">
+        <item name="android:paddingLeft">5dip</item>
+        <item name="android:paddingRight">5dip</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:scaleType">center</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="HotseatButtonEv.Left">
+        <item name="android:layout_marginLeft">2dip</item>
+        <item name="android:paddingLeft">5dip</item>
+        <item name="android:paddingRight">5dip</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:scaleType">center</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="HotseatButtonEv.farLeft">
+        <item name="android:layout_marginLeft">2dip</item>
+        <item name="android:paddingLeft">5dip</item>
+        <item name="android:paddingRight">5dip</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:scaleType">center</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="HotseatButtonEv.Right">
+        <item name="android:layout_marginRight">2dip</item>
+        <item name="android:paddingLeft">5dip</item>
+        <item name="android:paddingRight">5dip</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:scaleType">center</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="HotseatButtonEv.farRight">
+        <item name="android:layout_marginRight">2dip</item>
+        <item name="android:paddingLeft">5dip</item>
+        <item name="android:paddingRight">5dip</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:scaleType">center</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+    </style>
 
 </resources>

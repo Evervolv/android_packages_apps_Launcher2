@@ -112,6 +112,8 @@
             style="@style/HotseatButton.Left"
             android:layout_below="@id/all_apps_button"
 
+            android:src="@drawable/hotseat_phone"
+
             android:onClick="launchHotSeat"
             />
 
@@ -119,6 +121,8 @@
             android:id="@+id/hotseat_right"
             style="@style/HotseatButton.Right"
             android:layout_above="@id/all_apps_button"
+
+            android:src="@drawable/hotseat_browser"
 
             android:onClick="launchHotSeat"
             />
