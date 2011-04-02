@@ -230,7 +230,7 @@ public final class Launcher extends Activity
     private int HOTSEAT_RIGHT = 4;
     
     private Context mContext;
-    protected int mLauncherStyle = 1;//(Settings.System.getInt(mContext.getContentResolver(), Settings.System.LAUNCHER_STYLE, 0) == 1);
+    protected int mLauncherStyle;
 
     public static DockPanel dockPanel;
     
@@ -255,6 +255,8 @@ public final class Launcher extends Activity
         mContext = getApplicationContext();
         checkForLocaleChange();
         setWallpaperDimension();
+        
+        mLauncherStyle = (Settings.System.getInt(mContext.getContentResolver(), Settings.System.LAUNCHER_STYLE, 1));
         
         switch (mLauncherStyle) {
 	        case LAUNCHER_STYLE_STOCK:
