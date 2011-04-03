@@ -115,6 +115,8 @@
     <string name="menu_gestures">Gestures</string>
     <!-- Noun, menu item used to show the system settings -->
     <string name="menu_settings">Settings</string>
+    <!-- Menu item used to show the launcher settings -->
+    <string name="menu_launcher_settings">Launcher settings</string>
 
     <!-- Permissions: -->
     <skip />
@@ -153,6 +155,10 @@
 
 
     <string name="select_custom_app_title">Select custom app</string>
-	
+    
+    <!-- Launcher Settings -->
+    <string name="title_general_launcher_style">Launcher style</string>
+    <string name="dialog_title_launcher_style">Launcher style</string>
+    <string name="summary_launcher_style">Select the launcher style to use.</string>
 
 </resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	<ListPreference 
+		android:key="launcher_style"
+		android:dialogTitle="@string/dialog_title_launcher_style"
+		android:title="@string/title_general_launcher_style"
+		android:summary="@string/summary_launcher_style"
+		android:entries="@array/entries_launcherstyles" 
+		android:entryValues="@array/entryvalues_launcherstyles" 
+	/>
+</PreferenceScreen>

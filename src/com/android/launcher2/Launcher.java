@@ -112,7 +112,8 @@ public final class Launcher extends Activity
     private static final int MENU_SEARCH = MENU_WALLPAPER_SETTINGS + 1;
     private static final int MENU_NOTIFICATIONS = MENU_SEARCH + 1;
     private static final int MENU_SETTINGS = MENU_NOTIFICATIONS + 1;
-
+    private static final int MENU_LAUNCHER_SETTINGS = MENU_SETTINGS + 1;
+    
     private static final int REQUEST_CREATE_SHORTCUT = 1;
     private static final int REQUEST_CREATE_LIVE_FOLDER = 4;
     private static final int REQUEST_CREATE_APPWIDGET = 5;
@@ -661,22 +662,18 @@ public final class Launcher extends Activity
     void setHotseat(Intent data) {
         int hotseatNumber = mHotseatNumber;
         if (hotseatNumber == HOTSEAT_FARLEFT) {
-        	Log.d(TAG, "FarLeft: " + data.toUri(0));
             Settings.System.putString(getContentResolver(), 
             		Settings.System.FARLEFT_AB, data.toUri(0));
             
         } else if (hotseatNumber == HOTSEAT_FARRIGHT) {
-        	Log.d(TAG, "FarRight: " + data.toUri(0));
         	Settings.System.putString(getContentResolver(), 
         			Settings.System.FARRIGHT_AB, data.toUri(0));
         	
         } else if (hotseatNumber == HOTSEAT_RIGHT) {
-        	Log.d(TAG, "Right: " + data.toUri(0));
         	Settings.System.putString(getContentResolver(), 
         			Settings.System.RIGHT_AB, data.toUri(0));
         	
         } else if (hotseatNumber == HOTSEAT_LEFT) {
-        	Log.d(TAG, "Left: " + data.toUri(0));
         	Settings.System.putString(getContentResolver(), 
         			Settings.System.LEFT_AB, data.toUri(0));
         	
@@ -1268,7 +1265,10 @@ public final class Launcher extends Activity
         menu.add(0, MENU_SETTINGS, 0, R.string.menu_settings)
                 .setIcon(android.R.drawable.ic_menu_preferences).setAlphabeticShortcut('P')
                 .setIntent(settings);
-
+        //menu.add(0, MENU_LAUNCHER_SETTINGS, 0, R.string.menu_launcher_settings)
+        //.setIcon(android.R.drawable.ic_menu_preferences)
+        //.setAlphabeticShortcut('P');
+        
         return true;
     }
 
@@ -1314,6 +1314,9 @@ public final class Launcher extends Activity
             case MENU_NOTIFICATIONS:
                 showNotifications();
                 return true;
+            //case MENU_LAUNCHER_SETTINGS:
+            //    startSettings();
+            //    return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -1343,6 +1346,10 @@ public final class Launcher extends Activity
         startActivity(new Intent(android.provider.Settings.ACTION_MANAGE_ALL_APPLICATIONS_SETTINGS));
     }
 
+    private void startSettings() {
+    	startActivity(new Intent(this, LauncherPreferences.class));
+    }
+    
     void addAppWidget(Intent data) {
         // TODO: catch bad widget exception when sent
         int appWidgetId = data.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);

@@ -94,6 +94,15 @@
             </intent-filter>
         </activity>
 
+        <activity android:name="com.android.launcher2.LauncherPreferences"
+                android:clearTaskOnLaunch="true"
+                android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
         <!-- Intent received used to install shortcuts from other applications -->
         <receiver
             android:name="com.android.launcher2.InstallShortcutReceiver"
