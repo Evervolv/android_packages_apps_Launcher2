@@ -116,7 +116,7 @@
     <!-- Noun, menu item used to show the system settings -->
     <string name="menu_settings">Settings</string>
     <!-- Menu item used to show the launcher settings -->
-    <string name="menu_launcher_settings">Launcher settings</string>
+    <string name="menu_launcher_preferences">Preferences</string>
 
     <!-- Permissions: -->
     <skip />
@@ -156,9 +156,11 @@
 
     <string name="select_custom_app_title">Select custom app</string>
     
-    <!-- Launcher Settings -->
-    <string name="title_general_launcher_style">Launcher style</string>
-    <string name="dialog_title_launcher_style">Launcher style</string>
-    <string name="summary_launcher_style">Select the launcher style to use.</string>
+    <!-- Launcher preferences -->
+
+    	<!-- Setting for forcing launcher to portrait -->
+    <string name="category_launcher_general">General</string>
+    <string name="pref_launcher_title_force_portrait">Force portrait</string>
+    <string name="pref_launcher_summmary_force_portrait">Force launcher to portrait mode only.</string>
 
 </resources>

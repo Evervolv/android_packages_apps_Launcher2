@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-	<ListPreference 
-		android:key="launcher_style"
-		android:dialogTitle="@string/dialog_title_launcher_style"
-		android:title="@string/title_general_launcher_style"
-		android:summary="@string/summary_launcher_style"
-		android:entries="@array/entries_launcherstyles" 
-		android:entryValues="@array/entryvalues_launcherstyles" 
-	/>
+    <PreferenceCategory android:title="@string/category_launcher_general">
+
+    		<!-- Setting for forcing launcher to portrait -->
+	    <CheckBoxPreference
+	       android:key="pref_key_launcher_force_portrait"
+	       android:title="@string/pref_launcher_title_force_portrait"
+	       android:summary="@string/pref_launcher_summmary_force_portrait"
+	       android:defaultValue="false"
+	    />
+
+    </PreferenceCategory>
 </PreferenceScreen>

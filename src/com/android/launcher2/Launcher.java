@@ -31,7 +31,9 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.Intent.ShortcutIconResource;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -53,6 +55,7 @@ import android.os.Handler;
 import android.os.Parcelable;
 import android.os.SystemClock;
 import android.os.SystemProperties;
+import android.preference.PreferenceManager;
 import android.provider.LiveFolders;
 import android.provider.Settings;
 import android.text.Selection;
@@ -93,7 +96,7 @@ import com.android.launcher.R;
  * Default launcher application.
  */
 public final class Launcher extends Activity
-        implements View.OnClickListener, OnLongClickListener, LauncherModel.Callbacks, AllAppsView.Watcher {
+        implements View.OnClickListener, OnLongClickListener, LauncherModel.Callbacks, AllAppsView.Watcher, OnSharedPreferenceChangeListener {
     static final String TAG = "Launcher";
     static final boolean LOGD = false;
 
@@ -112,7 +115,7 @@ public final class Launcher extends Activity
     private static final int MENU_SEARCH = MENU_WALLPAPER_SETTINGS + 1;
     private static final int MENU_NOTIFICATIONS = MENU_SEARCH + 1;
     private static final int MENU_SETTINGS = MENU_NOTIFICATIONS + 1;
-    private static final int MENU_LAUNCHER_SETTINGS = MENU_SETTINGS + 1;
+    private static final int MENU_LAUNCHER_PREFERENCES = MENU_SETTINGS + 1;
     
     private static final int REQUEST_CREATE_SHORTCUT = 1;
     private static final int REQUEST_CREATE_LIVE_FOLDER = 4;
@@ -233,6 +236,8 @@ public final class Launcher extends Activity
     private Context mContext;
     protected int mLauncherStyle;
 
+    private SharedPreferences mSharedPrefs;
+    
     public static DockPanel dockPanel;
     
     @Override
@@ -256,6 +261,15 @@ public final class Launcher extends Activity
         mContext = getApplicationContext();
         checkForLocaleChange();
         setWallpaperDimension();
+        
+        mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        mSharedPrefs.registerOnSharedPreferenceChangeListener(this);
+        
+        if (mSharedPrefs.getBoolean(LauncherPreferences.LAUNCHER_FORCE_PORTRAIT, false)) {
+        	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        } else {
+        	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
+        }
         
         mLauncherStyle = (Settings.System.getInt(mContext.getContentResolver(), Settings.System.LAUNCHER_STYLE, 1));
         
@@ -1273,9 +1287,9 @@ public final class Launcher extends Activity
         menu.add(0, MENU_SETTINGS, 0, R.string.menu_settings)
                 .setIcon(android.R.drawable.ic_menu_preferences).setAlphabeticShortcut('P')
                 .setIntent(settings);
-        //menu.add(0, MENU_LAUNCHER_SETTINGS, 0, R.string.menu_launcher_settings)
-        //.setIcon(android.R.drawable.ic_menu_preferences)
-        //.setAlphabeticShortcut('P');
+        menu.add(0, MENU_LAUNCHER_PREFERENCES, 0, R.string.menu_launcher_preferences)
+        .setIcon(android.R.drawable.ic_menu_preferences)
+        .setAlphabeticShortcut('P');
         
         return true;
     }
@@ -1322,9 +1336,9 @@ public final class Launcher extends Activity
             case MENU_NOTIFICATIONS:
                 showNotifications();
                 return true;
-            //case MENU_LAUNCHER_SETTINGS:
-            //    startSettings();
-            //    return true;
+            case MENU_LAUNCHER_PREFERENCES:
+                startPreferences();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -1354,7 +1368,7 @@ public final class Launcher extends Activity
         startActivity(new Intent(android.provider.Settings.ACTION_MANAGE_ALL_APPLICATIONS_SETTINGS));
     }
 
-    private void startSettings() {
+    private void startPreferences() {
     	startActivity(new Intent(this, LauncherPreferences.class));
     }
     
@@ -2549,4 +2563,17 @@ public final class Launcher extends Activity
         mAllAppsGrid.dumpState();
         Log.d(TAG, "END launcher2 dump state");
     }
+
+	@Override
+	public void onSharedPreferenceChanged(SharedPreferences sp,
+			String key) {
+		if (key.equals(LauncherPreferences.LAUNCHER_FORCE_PORTRAIT)) {
+	        if (sp.getBoolean(key,false)) {
+	        	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+	        } else {
+	        	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
+	        }
+		}
+		
+	}
 }
