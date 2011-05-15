@@ -470,7 +470,6 @@ public final class Launcher extends Activity
             	mHotseatConfig[0] = Settings.System.getString(getContentResolver(), Settings.System.LEFT_AB);
             }
         } catch (Exception NullPointerException) {
-        	Log.d(TAG, "NullPointerException: loadHotseats()");
         	//TODO: Is this proper?
         }
         try {
@@ -479,7 +478,6 @@ public final class Launcher extends Activity
             	mHotseatConfig[1] = Settings.System.getString(getContentResolver(), Settings.System.RIGHT_AB);
             }
         } catch (Exception NullPointerException) {
-        	Log.d(TAG, "NullPointerException: loadHotseats()");
         	//TODO: Is this proper?
         }
         try {
@@ -488,7 +486,6 @@ public final class Launcher extends Activity
             	mHotseatConfig[2] = Settings.System.getString(getContentResolver(), Settings.System.FARRIGHT_AB);
             }
         } catch (Exception NullPointerException) {
-        	Log.d(TAG, "NullPointerException: loadHotseats()");
         	//TODO: Is this proper?
         }
         try {
@@ -497,7 +494,6 @@ public final class Launcher extends Activity
             	mHotseatConfig[3] = Settings.System.getString(getContentResolver(), Settings.System.FARLEFT_AB);
             }
         } catch (Exception NullPointerException) {
-        	Log.d(TAG, "NullPointerException: loadHotseats()");
         	//TODO: Is this proper?
         }
         
@@ -629,7 +625,6 @@ public final class Launcher extends Activity
 
         // For example, the user would PICK_SHORTCUT for "Music playlist", and we
         // launch over to the Music app to actually CREATE_SHORTCUT.
-        Log.d(TAG, Integer.toString(requestCode));
         if (resultCode == RESULT_OK && requestCode == REQUEST_HOTSEAT_APPLICATION) {
 	    	setHotseat(data);
         } else if (resultCode == RESULT_OK && mAddItemCellInfo != null) {
