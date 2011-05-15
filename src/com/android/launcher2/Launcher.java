@@ -231,7 +231,12 @@ public final class Launcher extends Activity
     private int HOTSEAT_FARRIGHT = 2;
     private int HOTSEAT_LEFT = 3;
     private int HOTSEAT_RIGHT = 4;
-    
+
+    private static final String LAUNCHER_HOTSEAT_LEFT = "launcher_hotseat_left";
+    private static final String LAUNCHER_HOTSEAT_FARLEFT = "launcher_hotseat_farleft";
+    private static final String LAUNCHER_HOTSEAT_RIGHT = "launcher_hotseat_right";
+    private static final String LAUNCHER_HOTSEAT_FARRIGHT = "launcher_hotseat_farright";
+
     private Context mContext;
     protected int mLauncherStyle;
 
@@ -464,38 +469,15 @@ public final class Launcher extends Activity
                 mHotseatLabels = null;
             }
         }
-        try {
-            if (!Settings.System.getString(getContentResolver(), Settings.System.LEFT_AB).equals(null)) {
-            	
-            	mHotseatConfig[0] = Settings.System.getString(getContentResolver(), Settings.System.LEFT_AB);
-            }
-        } catch (Exception NullPointerException) {
-        	//TODO: Is this proper?
-        }
-        try {
-            if (!Settings.System.getString(getContentResolver(), Settings.System.RIGHT_AB).equals(null)){
-            	
-            	mHotseatConfig[1] = Settings.System.getString(getContentResolver(), Settings.System.RIGHT_AB);
-            }
-        } catch (Exception NullPointerException) {
-        	//TODO: Is this proper?
-        }
-        try {
-            if (!Settings.System.getString(getContentResolver(), Settings.System.FARRIGHT_AB).equals(null)){
-            	
-            	mHotseatConfig[2] = Settings.System.getString(getContentResolver(), Settings.System.FARRIGHT_AB);
-            }
-        } catch (Exception NullPointerException) {
-        	//TODO: Is this proper?
-        }
-        try {
-            if (!Settings.System.getString(getContentResolver(), Settings.System.FARLEFT_AB).equals(null)){
-            	
-            	mHotseatConfig[3] = Settings.System.getString(getContentResolver(), Settings.System.FARLEFT_AB);
-            }
-        } catch (Exception NullPointerException) {
-        	//TODO: Is this proper?
-        }
+        
+		//Left
+    	mHotseatConfig[0] = mSharedPrefs.getString(LAUNCHER_HOTSEAT_LEFT, mHotseatConfig[0]);
+    	//Right
+    	mHotseatConfig[1] = mSharedPrefs.getString(LAUNCHER_HOTSEAT_RIGHT, mHotseatConfig[1]);
+    	//Farright
+    	mHotseatConfig[2] = mSharedPrefs.getString(LAUNCHER_HOTSEAT_FARRIGHT, mHotseatConfig[2]);
+    	//Farleft
+    	mHotseatConfig[3] = mSharedPrefs.getString(LAUNCHER_HOTSEAT_FARLEFT, mHotseatConfig[3]);
         
         PackageManager pm = getPackageManager();
         for (int i=0; i<mHotseatConfig.length; i++) {
@@ -677,23 +659,23 @@ public final class Launcher extends Activity
     
     void setHotseat(Intent data) {
         int hotseatNumber = mHotseatNumber;
-        if (hotseatNumber == HOTSEAT_FARLEFT) {
-            Settings.System.putString(getContentResolver(), 
-            		Settings.System.FARLEFT_AB, data.toUri(0));
-            
-        } else if (hotseatNumber == HOTSEAT_FARRIGHT) {
-        	Settings.System.putString(getContentResolver(), 
-        			Settings.System.FARRIGHT_AB, data.toUri(0));
-        	
+        
+        SharedPreferences.Editor editor = mSharedPrefs.edit();
+        
+    	if (hotseatNumber == HOTSEAT_LEFT) {
+	        editor.putString(LAUNCHER_HOTSEAT_LEFT, data.toUri(0));
+	        editor.commit();  
+    	} else if (hotseatNumber == HOTSEAT_FARLEFT) {
+            editor.putString(LAUNCHER_HOTSEAT_FARLEFT, data.toUri(0));
+            editor.commit();
         } else if (hotseatNumber == HOTSEAT_RIGHT) {
-        	Settings.System.putString(getContentResolver(), 
-        			Settings.System.RIGHT_AB, data.toUri(0));
-        	
-        } else if (hotseatNumber == HOTSEAT_LEFT) {
-        	Settings.System.putString(getContentResolver(), 
-        			Settings.System.LEFT_AB, data.toUri(0));
-        	
+            editor.putString(LAUNCHER_HOTSEAT_RIGHT, data.toUri(0));
+            editor.commit();
+    	} else if (hotseatNumber == HOTSEAT_FARRIGHT) {
+            editor.putString(LAUNCHER_HOTSEAT_FARRIGHT, data.toUri(0));
+            editor.commit();
         }
+    	
     	loadHotseats();
     	setupViews();
     }
