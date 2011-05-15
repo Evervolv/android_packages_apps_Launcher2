@@ -15,12 +15,10 @@
     <string-array name="entries_launcherstyles">
         <item>Stock style</item>
         <item>Evervolv style</item>
-        <item>Tablet style</item>
     </string-array>
 
     <string-array name="entryvalues_launcherstyles">
         <item>0</item>
         <item>1</item>
-        <item>2</item>
     </string-array>
 </resources>

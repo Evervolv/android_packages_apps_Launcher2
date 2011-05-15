@@ -157,10 +157,13 @@
     <string name="select_custom_app_title">Select custom app</string>
     
     <!-- Launcher preferences -->
-
-    	<!-- Setting for forcing launcher to portrait -->
     <string name="category_launcher_general">General</string>
+    	<!-- Setting for forcing launcher to portrait -->
     <string name="pref_launcher_title_force_portrait">Force portrait</string>
     <string name="pref_launcher_summmary_force_portrait">Force launcher to portrait mode only.</string>
+        <!-- Setting for launcher style -->
+    <string name="pref_launcher_title_launcher_style">Launcher style</string>
+    <string name="pref_launcher_dialog_title_launcher_style">Launcher style</string>
+    <string name="pref_launcher_summary_launcher_style">Select the launcher style to use.</string>
 
 </resources>

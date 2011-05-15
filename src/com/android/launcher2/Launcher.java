@@ -269,9 +269,9 @@ public final class Launcher extends Activity
         } else {
         	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
         }
-        
-        mLauncherStyle = (Settings.System.getInt(mContext.getContentResolver(), Settings.System.LAUNCHER_STYLE, 1));
-        
+
+        mLauncherStyle = Integer.valueOf(mSharedPrefs.getString(LauncherPreferences.LAUNCHER_STYLE, "1"));
+
         switch (mLauncherStyle) {
 	        case LAUNCHER_STYLE_STOCK:
 	        	setContentView(R.layout.launcher);
