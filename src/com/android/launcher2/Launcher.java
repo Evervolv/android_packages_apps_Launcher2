@@ -469,15 +469,19 @@ public final class Launcher extends Activity
                 mHotseatLabels = null;
             }
         }
-        
-		//Left
-    	mHotseatConfig[0] = mSharedPrefs.getString(LAUNCHER_HOTSEAT_LEFT, mHotseatConfig[0]);
-    	//Right
-    	mHotseatConfig[1] = mSharedPrefs.getString(LAUNCHER_HOTSEAT_RIGHT, mHotseatConfig[1]);
-    	//Farright
-    	mHotseatConfig[2] = mSharedPrefs.getString(LAUNCHER_HOTSEAT_FARRIGHT, mHotseatConfig[2]);
-    	//Farleft
-    	mHotseatConfig[3] = mSharedPrefs.getString(LAUNCHER_HOTSEAT_FARLEFT, mHotseatConfig[3]);
+        try { 
+    		//Left
+        	mHotseatConfig[0] = mSharedPrefs.getString(LAUNCHER_HOTSEAT_LEFT, mHotseatConfig[0]);
+        	//Right
+        	mHotseatConfig[1] = mSharedPrefs.getString(LAUNCHER_HOTSEAT_RIGHT, mHotseatConfig[1]);
+        	//Farright
+        	mHotseatConfig[2] = mSharedPrefs.getString(LAUNCHER_HOTSEAT_FARRIGHT, mHotseatConfig[2]);
+        	//Farleft
+        	mHotseatConfig[3] = mSharedPrefs.getString(LAUNCHER_HOTSEAT_FARLEFT, mHotseatConfig[3]);	
+        } catch (NullPointerException e) {
+        	
+        }
+
         
         PackageManager pm = getPackageManager();
         for (int i=0; i<mHotseatConfig.length; i++) {
