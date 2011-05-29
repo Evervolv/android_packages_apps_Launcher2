@@ -39,15 +39,81 @@
                 
     </com.android.launcher2.Workspace>
 
-	<com.android.launcher2.DockPanel
-		android:id="@+id/bottom_dock"
-		android:layout_width="fill_parent" 
-		android:layout_height="wrap_content"
-		android:layout_gravity="bottom" 
-		ma:dockPosition="bottom"
-		ma:contentLayoutId="@layout/dockpanel_horizontal_content"
-		ma:handleButtonDrawableResourceId="@drawable/bottom_dock_handle" 
+    <RelativeLayout
+        android:id="@+id/all_apps_button_cluster"
+        android:layout_width="match_parent"
+        android:layout_height="100dip"
+        android:layout_gravity="bottom"
+        android:paddingTop="2dip"
+    >
+
+        <com.android.launcher2.HandleView
+            android:id="@+id/all_apps_button_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+	    android:scaleType="center"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/all_apps_button"
+            launcher:direction="horizontal"
+        />
+
+        <ImageView
+            android:id="@+id/hotseat_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+	    android:scaleType="center"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:onClick="launchHotSeat"
+	    android:layout_marginBottom="50dip"
+        />
+
+        <ImageView
+            android:id="@+id/hotseat_farleft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+	    android:scaleType="center"
+            android:layout_toRightOf="@id/all_apps_button_left"
+            android:layout_alignParentBottom="true"
+            android:onClick="launchHotSeat"
+	    android:layout_marginLeft="12dip"
+        />
+
+        <com.android.launcher2.HandleView
+            android:id="@+id/all_apps_button_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+	    android:scaleType="center"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/all_apps_button"
+            launcher:direction="horizontal"
+        />
+
+        <ImageView
+            android:id="@+id/hotseat_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+	    android:scaleType="center"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:onClick="launchHotSeat"
+	    android:layout_marginBottom="50dip"
+        />
+
+        <ImageView
+            android:id="@+id/hotseat_farright"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+	    android:scaleType="center"
+            android:layout_toLeftOf="@id/all_apps_button_right"
+            android:layout_alignParentBottom="true"
+            android:onClick="launchHotSeat"
+	    android:layout_marginRight="12dip"
 	/>
+
+    </RelativeLayout>
 
     <com.android.launcher2.DeleteZone
         android:id="@+id/delete_zone"

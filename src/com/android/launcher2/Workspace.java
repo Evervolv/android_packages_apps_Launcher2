@@ -933,7 +933,7 @@ public class Workspace extends ViewGroup implements DropTarget, DragSource, Drag
                     snapToScreen(whichScreen, 0, true);
                 }
             }
-            if (!(mLauncher.mLauncherStyle == Launcher.LAUNCHER_STYLE_STOCK)){
+            if (mLauncher.mLauncherStyle == Launcher.LAUNCHER_STYLE_EVERVOLV){
 	            if (mTouchState == TOUCH_SWIPE_DOWN_GESTURE) {
 	                if (Launcher.dockPanel.isOpen) {
 	                	Launcher.dockPanel.close();

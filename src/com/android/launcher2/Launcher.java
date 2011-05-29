@@ -194,6 +194,7 @@ public final class Launcher extends Activity
 
     private DeleteZone mDeleteZone;
     private HandleView mHandleView;
+    private HandleView mHandleView2;
     private AllAppsView mAllAppsGrid;
 
     private Bundle mSavedState;
@@ -852,11 +853,22 @@ public final class Launcher extends Activity
         DeleteZone deleteZone = (DeleteZone) dragLayer.findViewById(R.id.delete_zone);
         mDeleteZone = deleteZone;
 
-        mHandleView = (HandleView) findViewById(R.id.all_apps_button);
-        mHandleView.setLauncher(this);
-        mHandleView.setOnClickListener(this);
-        mHandleView.setOnLongClickListener(this);
-        
+        if (mLauncherStyle == this.LAUNCHER_STYLE_TABLET) {
+            mHandleView = (HandleView) findViewById(R.id.all_apps_button_right);
+            mHandleView.setLauncher(this);
+            mHandleView.setOnClickListener(this);
+            mHandleView.setOnLongClickListener(this);
+            
+            mHandleView2 = (HandleView) findViewById(R.id.all_apps_button_left);
+            mHandleView2.setLauncher(this);
+            mHandleView2.setOnClickListener(this);
+            mHandleView2.setOnLongClickListener(this);
+        } else {	
+	        mHandleView = (HandleView) findViewById(R.id.all_apps_button);
+	        mHandleView.setLauncher(this);
+	        mHandleView.setOnClickListener(this);
+	        mHandleView.setOnLongClickListener(this);
+        }
         ImageView hotseatLeft = (ImageView) findViewById(R.id.hotseat_left);
         ImageView hotseatRight = (ImageView) findViewById(R.id.hotseat_right);
 
@@ -1615,7 +1627,7 @@ public final class Launcher extends Activity
             startActivitySafely(intent, tag);
         } else if (tag instanceof FolderInfo) {
             handleFolderClick((FolderInfo) tag);
-        } else if (v == mHandleView) {
+        } else if (v == mHandleView || v == mHandleView2) {
             if (isAllAppsVisible()) {
                 closeAllApps(true);
             } else {
