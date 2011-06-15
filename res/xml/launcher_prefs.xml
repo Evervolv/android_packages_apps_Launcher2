@@ -28,5 +28,14 @@
                     android:targetClass="com.android.launcher2.LauncherStylePreference" />
         </PreferenceScreen>
 
+		<ListPreference
+		    android:key="pref_key_transition_style"
+		    android:title="@string/pref_title_desktop_transition"
+		    android:summary="@string/pref_summary_desktop_transition"
+		    android:defaultValue="@string/config_desktop_transition"
+		    android:entryValues="@array/desktop_transition_values"
+		    android:entries="@array/desktop_transition_entries"
+		/>
+
     </PreferenceCategory>
 </PreferenceScreen>

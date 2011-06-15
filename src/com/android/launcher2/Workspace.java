@@ -27,16 +27,20 @@ import android.appwidget.AppWidgetProviderInfo;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ProviderInfo;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PaintFlagsDrawFilter;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.IBinder;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -49,6 +53,9 @@ import android.view.ViewParent;
 import android.view.animation.Interpolator;
 import android.widget.Scroller;
 import android.widget.TextView;
+import android.view.animation.Transformation;
+import android.graphics.Matrix;
+
 
 import com.android.launcher.R;
 
@@ -135,6 +142,19 @@ public class Workspace extends WidgetSpace implements DropTarget, DragSource, Dr
     private static final float BASELINE_FLING_VELOCITY = 2500.f;
     private static final float FLING_VELOCITY_INFLUENCE = 0.4f;
     
+    // used for transitions
+    private static PaintFlagsDrawFilter sFilterBitmap = new PaintFlagsDrawFilter(0, Paint.FILTER_BITMAP_FLAG);
+    private static PaintFlagsDrawFilter sFilterBitmapRemove = new PaintFlagsDrawFilter(Paint.FILTER_BITMAP_FLAG, 0); 
+
+    private boolean mIsTransformRotate = false;
+    private int mTransformRotateAnchor = 0;
+    private boolean mIsTransitionNegative = false;
+    
+    private boolean mIsTransformOtherView = false;
+    private float mTransformAmount = 0;
+    
+    private SharedPreferences mSharedPrefs;
+    
     private static class WorkspaceOvershootInterpolator implements Interpolator {
         private static final float DEFAULT_TENSION = 1.3f;
         private float mTension;
@@ -204,6 +224,9 @@ public class Workspace extends WidgetSpace implements DropTarget, DragSource, Dr
         final ViewConfiguration configuration = ViewConfiguration.get(getContext());
         mTouchSlop = configuration.getScaledTouchSlop();
         mMaximumVelocity = configuration.getScaledMaximumFlingVelocity();
+        
+        mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+    
     }
 
     @Override
@@ -485,9 +508,6 @@ public class Workspace extends WidgetSpace implements DropTarget, DragSource, Dr
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
-        boolean restore = false;
-        int restoreCount = 0;
-
         // ViewGroup.dispatchDraw() supports many features we don't need:
         // clip to padding, layout animation, animation listener, disappearing
         // children, etc. The following implementation attempts to fast-track
@@ -498,21 +518,86 @@ public class Workspace extends WidgetSpace implements DropTarget, DragSource, Dr
         if (fastDraw) {
             drawChild(canvas, getChildAt(mCurrentScreen), getDrawingTime());
         } else {
-            final long drawingTime = getDrawingTime();
-            final float scrollPos = (float) mScrollX / getWidth();
-            final int leftScreen = (int) scrollPos;
-            final int rightScreen = leftScreen + 1;
-            if (leftScreen >= 0) {
-                drawChild(canvas, getChildAt(leftScreen), drawingTime);
-            }
-            if (scrollPos != leftScreen && rightScreen < getChildCount()) {
-                drawChild(canvas, getChildAt(rightScreen), drawingTime);
-            }
-        }
+            long drawingTime = getDrawingTime();
+            int width = getWidth();
+            int scrollX = getScrollX();
+            float scrollPos = (float) scrollX / width;
+            boolean endlessScrolling = false; // implement later
 
-        if (restore) {
-            canvas.restoreToCount(restoreCount);
+            int leftScreen;
+            int rightScreen;
+            boolean isScrollToRight = false;
+            int childCount = getChildCount();
+            if (scrollPos < 0 && endlessScrolling) {
+                leftScreen = childCount - 1;
+                rightScreen = 0;
+            } else {
+                leftScreen = Math.min( (int) scrollPos, childCount - 1 );
+                rightScreen = leftScreen + 1;
+                if (endlessScrolling) {
+                    rightScreen = rightScreen % childCount;
+                    isScrollToRight = true;
+                }
+            }
+
+            int currentScreen;
+            int otherScreen;
+            if ( isScrollToRight )
+            {
+                currentScreen = leftScreen;
+                otherScreen = rightScreen;
+            }
+            else
+            {
+                currentScreen = rightScreen;
+                otherScreen = leftScreen;
+            }
+
+            canvas.save();
+            int transitionStyle = Integer.valueOf(
+            		mSharedPrefs.getString(LauncherPreferences.TRANSITION_STYLE, "1"));
+            if (isScreenNoValid(currentScreen)) {
+                View childAt = getChildAt(currentScreen);
+                if( transitionStyle != 1 )
+                {
+                    int xOffset = scrollX - childAt.getLeft();
+                    float transformAmount = Math.abs( xOffset )/(float)width;
+                    preTransitionDraw(canvas, transitionStyle, isScrollToRight, xOffset, transformAmount, width);
+                    drawChild(canvas, childAt, drawingTime);
+                    postTransitionDraw(canvas, transitionStyle, isScrollToRight, xOffset, transformAmount, width);
+                }
+                else
+                {
+                    drawChild(canvas, childAt, drawingTime);
+                }
+            }
+
+            if (isScreenNoValid(otherScreen)) {
+                if ( endlessScrolling && rightScreen == 0 )
+                {
+                    // looping!
+                    if ( isScrollToRight )
+                    {
+                        canvas.translate(childCount * width, 0);
+                    }
+                    else
+                    {
+                        canvas.translate(-childCount * width, 0);
+                    }
+                }
+                drawChild(canvas, getChildAt(otherScreen), drawingTime);
+            }
+            
+            if (transitionStyle != 1 )
+            {
+                finishTransitionDraw(canvas, transitionStyle);
+            }
+            canvas.restore();
         }
+    }
+
+    private boolean isScreenNoValid(int screen) {
+    	return screen >= 0 && screen < getChildCount();
     }
 
     protected void onAttachedToWindow() {
@@ -1551,8 +1636,234 @@ public class Workspace extends WidgetSpace implements DropTarget, DragSource, Dr
             }
         };
     }
+    
+    @Override
+    protected boolean getChildStaticTransformation(View child, Transformation transformation)
+    {
+        float transformAmount = mTransformAmount;
+        
+        if ( mIsTransformRotate )
+        {
+            Matrix matrix = transformation.getMatrix();
 
-	@Override
+            int offset = mIsTransformOtherView?90:0;
+            if ( mIsTransitionNegative )
+            {
+                offset = -offset;
+            }
+            matrix.setRotate(transformAmount * 90 + offset, mTransformRotateAnchor, 0);
+            
+            float amount;
+            if ( mIsTransformOtherView )
+            {
+                amount = Math.abs( transformAmount );
+            }
+            else
+            {
+                amount = 1 - Math.abs( transformAmount );
+            }
+            if ( amount < 0.5f )
+            {
+                transformation.setTransformationType(Transformation.TYPE_BOTH);
+                transformation.setAlpha(amount * 2);
+            }
+            else
+            {
+                transformation.setTransformationType(Transformation.TYPE_MATRIX);
+                transformation.setAlpha(1);
+            }
+        }
+        else // must be transformation then
+        {
+            Matrix matrix = transformation.getMatrix();
+
+            float width = (float) child.getWidth();
+            float height = (float) child.getHeight();
+            float sourceMatrix[] = new float[] {0f, 0f, width, 0, width, height, 0, height};
+            float targetMatrix[] = new float[] {0f, 0f, width, 0, width, height, 0, height};
+
+            if( mIsTransformOtherView )
+            {
+                if ( !mIsTransitionNegative )
+                {
+                    targetMatrix[7] *= ( 1 - ( -transformAmount / 3));
+                    targetMatrix[1] = height - targetMatrix[7];
+
+                    targetMatrix[0] = targetMatrix[2] * -transformAmount; 
+                    targetMatrix[6] = targetMatrix[0];
+                }
+                else
+                {
+                    targetMatrix[5] *= ( 1 - ( ( 1 - transformAmount ) / 3));
+                    targetMatrix[3] = height - targetMatrix[5];
+
+                    targetMatrix[2] = targetMatrix[2] * transformAmount;
+                    targetMatrix[4] = targetMatrix[2];
+                }
+            }
+            else if ( mIsTransitionNegative ) // !mIsTransformOtherView
+            {
+                targetMatrix[7] *= ( 1 - ( -transformAmount / 3));
+                targetMatrix[1] = height - targetMatrix[7];
+
+                targetMatrix[2] *= ( 1 - -transformAmount ); 
+                targetMatrix[4] = targetMatrix[2];
+            }
+            else
+            {
+                targetMatrix[5] *= ( 1 - ( transformAmount / 3));
+                targetMatrix[3] = height - targetMatrix[5];
+
+                targetMatrix[2] *= ( 1 - transformAmount ); 
+                targetMatrix[4] = targetMatrix[2];
+            }
+
+            matrix.setPolyToPoly(sourceMatrix, 0, targetMatrix, 0, sourceMatrix.length >> 1);
+
+            float amount = Math.abs( transformAmount );
+            if ( mIsTransformOtherView )
+            {
+                if ( !mIsTransitionNegative )
+                {
+                    amount = 1 - amount;
+                }
+            }
+            else
+            {
+                amount = 1 - amount;
+            }
+            if ( amount > .5f )
+            {
+                transformation.setTransformationType(Transformation.TYPE_MATRIX);
+                transformation.setAlpha(1);
+            }
+            else
+            {
+                transformation.setTransformationType(Transformation.TYPE_BOTH);
+                transformation.setAlpha(amount * 2);
+            }
+        }
+    
+        return true;
+    }
+
+    private void preTransitionDraw(Canvas canvas, int mTransitionStyle, boolean isMovingRight, int xOffset, float transformAmount, int width )
+    {
+        if ( mTransitionStyle == 2 )  // rotate
+        {
+            mIsTransformRotate = true;
+            mIsTransitionNegative = isMovingRight;
+            if ( isMovingRight )
+            {
+                mTransformAmount = transformAmount;
+                mTransformRotateAnchor = 0;
+            }
+            else
+            {
+                mTransformRotateAnchor = width;
+                mTransformAmount = -transformAmount;
+            }
+
+            canvas.translate(xOffset, 0);
+            canvas.setDrawFilter(sFilterBitmap);
+            setStaticTransformationsEnabled( true );
+        }
+        else if ( mTransitionStyle == 3 )  // flip
+        {
+            mIsTransitionNegative = !isMovingRight;
+            if( isMovingRight )
+            {
+                mTransformAmount = transformAmount;
+                canvas.translate(xOffset, 0);
+            }
+            else
+            {
+                mTransformAmount = -transformAmount;
+            }
+            
+            canvas.setDrawFilter(sFilterBitmap);
+            setStaticTransformationsEnabled( true );
+        }
+        else if ( mTransitionStyle == 4) // cube
+        {
+            mIsTransitionNegative = isMovingRight;
+            if( isMovingRight )
+            {
+                mTransformAmount = -transformAmount;
+                canvas.translate(xOffset, 0);
+            }
+            else
+            {
+                mTransformAmount = transformAmount;
+            }
+            
+            canvas.setDrawFilter(sFilterBitmap);
+            setStaticTransformationsEnabled( true );
+        }
+    }
+
+    private void postTransitionDraw(Canvas canvas, int mTransitionStyle, boolean isMovingRight, int xOffset, float transformAmount, int width )
+    {
+        if ( mTransitionStyle == 2 )  // rotate
+        {
+            canvas.setDrawFilter(sFilterBitmapRemove);
+            canvas.translate(-xOffset, 0);
+
+            if( isMovingRight )
+            {
+                canvas.translate(xOffset - width, 0);
+            }
+            else
+            {
+                canvas.translate(width + xOffset, 0);
+            }
+
+            mIsTransformOtherView = true;
+        }
+        else if ( mTransitionStyle == 3 )  // flip
+        {
+            if( isMovingRight )
+            {
+                mTransformAmount = -( 1 - transformAmount );
+                canvas.translate(-xOffset, 0);
+                canvas.translate(xOffset - width, 0);
+            }
+            else
+            {
+                mTransformAmount = transformAmount;
+                canvas.translate(width + xOffset, 0);
+            }
+
+            mIsTransformOtherView = true;
+
+        }
+        else if ( mTransitionStyle == 4) // cube
+        {
+            if( isMovingRight )
+            {
+                mTransformAmount = transformAmount;
+                canvas.translate(-xOffset, 0);
+            }
+            else
+            {
+                mTransformAmount = -( 1 - transformAmount );
+            }
+            mIsTransformOtherView = true;
+        }
+    }
+
+    private void finishTransitionDraw(Canvas canvas, int mTransitionStyle)
+    {
+        // since we needed to alter the other screen, 
+        // we had to wait to clean this mess up
+        setStaticTransformationsEnabled( false );
+        canvas.setDrawFilter(sFilterBitmapRemove);
+        
+        mIsTransformRotate = false;
+        mIsTransformOtherView = false;
+    }
+
+    @Override
 	public Activity getLauncherActivity() {
 		return mLauncher;
 	}

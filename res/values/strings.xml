@@ -170,4 +170,7 @@
     <string name="style_evervolv">Evervolv</string>
     <string name="style_gingerbread">Gingerbread</string>
 
+    <string name="pref_title_desktop_transition">Desktop Transition</string>
+    <string name="pref_summary_desktop_transition">How desktop screens change when changed</string>
+
 </resources>

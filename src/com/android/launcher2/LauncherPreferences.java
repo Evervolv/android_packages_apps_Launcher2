@@ -20,6 +20,7 @@ public class LauncherPreferences extends PreferenceActivity implements OnSharedP
 	
 	public static final String LAUNCHER_FORCE_PORTRAIT = "pref_key_launcher_force_portrait";
 	public static final String LAUNCHER_STYLE = "pref_key_launcher_style";
+	public static final String TRANSITION_STYLE = "pref_key_transition_style";
 	
 	private boolean restartLauncher = false;
 	private SharedPreferences mSharedPrefs;

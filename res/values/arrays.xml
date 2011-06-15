@@ -11,4 +11,18 @@
         <item>@drawable/hotseat_phone</item>
         <item>@drawable/hotseat_browser</item>
     </array>
+    <string-array name="desktop_transition_entries">
+	    <item>Normal</item>
+	    <item>Rotate</item>
+	    <item>Page</item>
+	    <item>Cube</item>
+    </string-array>
+
+    <string-array name="desktop_transition_values">
+	    <item>1</item>
+	    <item>2</item>
+	    <item>3</item>
+	    <item>4</item>
+    </string-array>
+	
 </resources>
