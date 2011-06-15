@@ -41,4 +41,13 @@
     <!-- the area at the edge of the screen that makes the workspace go left
          or right while you're dragging. -->
     <dimen name="scroll_zone">20dp</dimen>
+
+
+    <dimen name="chooserheader_marginTop">6dp</dimen>
+    <dimen name="chooserheader_marginBottom">6dp</dimen>
+
+    <dimen name="choosertext_marginTop">380dp</dimen>
+    <dimen name="chooserapply_marginTop">8dp</dimen>
+    <dimen name="chooserapply_marginBottom">2dp</dimen>
+
 </resources>

@@ -11,14 +11,4 @@
         <item>@drawable/hotseat_phone</item>
         <item>@drawable/hotseat_browser</item>
     </array>
-
-    <string-array name="entries_launcherstyles">
-        <item>Stock style</item>
-        <item>Evervolv style</item>
-    </string-array>
-
-    <string-array name="entryvalues_launcherstyles">
-        <item>0</item>
-        <item>1</item>
-    </string-array>
 </resources>

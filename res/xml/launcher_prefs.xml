@@ -9,7 +9,7 @@
 		android:summary="@string/pref_launcher_summmary_force_portrait"
 		android:defaultValue="false"
 	/>
-
+<!--
 	<ListPreference
 		android:key="pref_key_launcher_style"
 		android:dialogTitle="@string/pref_launcher_dialog_title_launcher_style"
@@ -18,6 +18,15 @@
 		android:entries="@array/entries_launcherstyles" 
 		android:entryValues="@array/entryvalues_launcherstyles" 
 	/>
+-->
+        <PreferenceScreen 
+		android:key="pref_key_launcher_style"
+                android:title="@string/pref_launcher_title_launcher_style" 
+                android:summary="@string/pref_launcher_summary_launcher_style">
+            <intent android:action="android.intent.action.MAIN"
+                    android:targetPackage="com.android.launcher"
+                    android:targetClass="com.android.launcher2.LauncherStylePreference" />
+        </PreferenceScreen>
 
     </PreferenceCategory>
 </PreferenceScreen>
