@@ -165,5 +165,9 @@
     <string name="pref_launcher_title_launcher_style">Launcher style</string>
     <string name="pref_launcher_dialog_title_launcher_style">Launcher style</string>
     <string name="pref_launcher_summary_launcher_style">Select the launcher style to use.</string>
+    <string name="apply">Apply</string>
+    <string name="item_count">%1$d/%2$d</string>
+    <string name="style_evervolv">Evervolv</string>
+    <string name="style_gingerbread">Gingerbread</string>
 
 </resources>
