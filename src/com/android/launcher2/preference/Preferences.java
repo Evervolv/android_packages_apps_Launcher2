@@ -16,18 +16,53 @@
 
 package com.android.launcher2.preference;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceScreen;
+import android.preference.Preference.OnPreferenceChangeListener;
+import android.util.Log;
+
 import com.android.launcher.R;
 
-public class Preferences extends PreferenceActivity {
+public class Preferences extends PreferenceActivity implements 
+        OnPreferenceChangeListener {
 
     private static final String TAG = "Launcher.Preferences";
+
+    private static final String SEARCHBAR_PREF = "ui_homescreen_general_search";
+    
+    private SharedPreferences mPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
+
+        mPrefs = getSharedPreferences(PreferencesProvider
+                .PREFERENCES_KEY, Context.MODE_PRIVATE);
     }
+
+    @Override
+    public boolean onPreferenceChange(Preference preference, Object newValue) {
+        return false;
+    }
+
+    @Override
+    public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen
+            , Preference preference) {
+        if (preference.getKey().equals(SEARCHBAR_PREF)) {
+            setForReset();
+        }
+        return false;
+    }
+
+    private void setForReset() {
+        SharedPreferences.Editor editor = mPrefs.edit();
+        editor.putBoolean(PreferencesProvider.PREFERENCES_CHANGED, true);
+        editor.commit();
+    }
+
 }
