@@ -45,6 +45,8 @@
     <!-- Market button text.  The market button text is removed in Launcher.java 
          in the Phone UI. [CHAR LIMIT=32] -->
     <string name="market">Shop</string>
+    <!-- Overflow menu button text. -->
+    <string name="menu">Menu</string>
     <!-- The format string for the dimensions of a widget in the drawer -->
     <!-- There is a special version of this format string for Farsi -->
     <string name="widget_dims_format">%1$d \u00d7 %2$d</string>
