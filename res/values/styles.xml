@@ -175,7 +175,7 @@
         <!-- Overridden in values-land -->
     </style>
 
-    <style name="MarketButton">
+    <style name="ExtraButton">
         <item name="android:paddingLeft">5dp</item>
         <item name="android:paddingRight">5dp</item>
         <item name="android:textColor">@color/workspace_all_apps_and_delete_zone_text_color</item>
