@@ -33,6 +33,7 @@ public class Preferences extends PreferenceActivity implements
     private static final String TAG = "Launcher.Preferences";
 
     private static final String SEARCHBAR_PREF = "ui_homescreen_general_search";
+    private static final String SCROLLING_PREF = "ui_homescreen_scrolling_scroll_wallpaper";
     
     private SharedPreferences mPrefs;
 
@@ -54,6 +55,8 @@ public class Preferences extends PreferenceActivity implements
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen
             , Preference preference) {
         if (preference.getKey().equals(SEARCHBAR_PREF)) {
+            setForReset();
+        } else if (preference.getKey().equals(SCROLLING_PREF)) {
             setForReset();
         }
         return false;
