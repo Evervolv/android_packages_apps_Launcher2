@@ -30,6 +30,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -58,6 +59,7 @@ import android.widget.TextView;
 import com.android.launcher.R;
 import com.android.launcher2.FolderIcon.FolderRingAnimator;
 import com.android.launcher2.LauncherSettings.Favorites;
+import com.android.launcher2.preference.PreferencesProvider;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -256,6 +258,9 @@ public class Workspace extends SmoothPagedView
     private float[] mNewRotationYs;
     private float mTransitionProgress;
 
+    // Preferences
+    private boolean mShowSearchBar;
+
     /**
      * Used to inflate the Workspace from XML.
      *
@@ -333,6 +338,9 @@ public class Workspace extends SmoothPagedView
 
         LauncherModel.updateWorkspaceLayoutCells(cellCountX, cellCountY);
         setHapticFeedbackEnabled(false);
+
+        // Preferences
+        mShowSearchBar = PreferencesProvider.Interface.Homescreen.getShowSearchBar(context);
 
         mLauncher = (Launcher) context;
         initWorkspace();
@@ -421,6 +429,14 @@ public class Workspace extends SmoothPagedView
             mBackground = res.getDrawable(R.drawable.apps_customize_bg);
         } catch (Resources.NotFoundException e) {
             // In this case, we will skip drawing background protection
+        }
+
+        if (!mShowSearchBar) {
+            int paddingTop = 0;
+            if (mLauncher.getCurrentOrientation() == Configuration.ORIENTATION_PORTRAIT) {
+                paddingTop = (int)res.getDimension(R.dimen.qsb_bar_hidden_inset);
+            }
+            setPadding(0, paddingTop, getPaddingRight(), getPaddingBottom());
         }
 
         mWallpaperOffset = new WallpaperOffsetInterpolator();
@@ -3778,8 +3794,10 @@ public class Workspace extends SmoothPagedView
         final View scrollIndicator = getScrollingIndicator();
 
         cancelScrollingIndicatorAnimations();
-        if (qsbDivider != null) qsbDivider.setAlpha(reducedFade);
-        if (dockDivider != null) dockDivider.setAlpha(reducedFade);
+        if (mShowSearchBar) {
+            if (qsbDivider != null) qsbDivider.setAlpha(reducedFade);
+            if (dockDivider != null) dockDivider.setAlpha(reducedFade);
+        }
         scrollIndicator.setAlpha(1 - fade);
     }
 }
