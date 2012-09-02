@@ -97,7 +97,7 @@ import android.widget.Toast;
 import com.android.common.Search;
 import com.android.launcher.R;
 import com.android.launcher2.DropTarget.DragObject;
-import com.android.launcher2.preference.Preferences;
+import com.android.launcher2.preference.*;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -306,6 +306,10 @@ public final class Launcher extends Activity
     private HideFromAccessibilityHelper mHideFromAccessibilityHelper
         = new HideFromAccessibilityHelper();
 
+    // Preferences
+    private boolean mAutoRotate;
+    private boolean mShowSearchBar;
+
     private Runnable mBuildLayersRunnable = new Runnable() {
         public void run() {
             if (mWorkspace != null) {
@@ -374,6 +378,11 @@ public final class Launcher extends Activity
         // this also ensures that any synchronous binding below doesn't re-trigger another
         // LauncherModel load.
         mPaused = false;
+
+        // Preferences
+        mAutoRotate = PreferencesProvider.Interface.General.getAutoRotate(this,
+                        getResources().getBoolean(R.bool.allow_rotation));
+        mShowSearchBar = PreferencesProvider.Interface.Homescreen.getShowSearchBar(this);
 
         if (PROFILE_STARTUP) {
             android.os.Debug.startMethodTracing(
@@ -736,6 +745,10 @@ public final class Launcher extends Activity
 
         mPaused = false;
         sPausedFromUserAction = false;
+        // Restart launcher when preferences are changed
+        if (preferencesChanged()) {
+            android.os.Process.killProcess(android.os.Process.myPid());
+        }
         if (mRestoring || mOnResumeNeedsLoad) {
             mWorkspaceLoading = true;
             mModel.startLoader(true, -1);
@@ -954,6 +967,11 @@ public final class Launcher extends Activity
 
         // Get the search/delete bar
         mSearchDropTargetBar = (SearchDropTargetBar) mDragLayer.findViewById(R.id.qsb_bar);
+
+        // Hide the search divider if we are hiding search bar
+        if (!mShowSearchBar && getCurrentOrientation() == Configuration.ORIENTATION_LANDSCAPE) {
+            ((View) findViewById(R.id.qsb_divider)).setVisibility(View.GONE);
+        }
 
         // Setup AppsCustomize
         mAppsCustomizeTabHost = (AppsCustomizeTabHost)
@@ -1633,14 +1651,14 @@ public final class Launcher extends Activity
             .setIcon(android.R.drawable.ic_menu_manage)
             .setIntent(manageApps)
             .setAlphabeticShortcut('M');
-        menu.add(0, MENU_SYSTEM_SETTINGS, 0, R.string.menu_settings)
-            .setIcon(android.R.drawable.ic_menu_preferences)
-            .setIntent(settings)
-            .setAlphabeticShortcut('P');
         menu.add(0, MENU_PREFERENCES, 0, R.string.menu_preferences)
             .setIcon(android.R.drawable.ic_menu_preferences)
             .setIntent(preferences)
             .setAlphabeticShortcut('O');
+        menu.add(0, MENU_SYSTEM_SETTINGS, 0, R.string.menu_settings)
+            .setIcon(android.R.drawable.ic_menu_preferences)
+            .setIntent(settings)
+            .setAlphabeticShortcut('P');
         if (!helpUrl.isEmpty()) {
             menu.add(0, MENU_HELP, 0, R.string.menu_help)
                 .setIcon(android.R.drawable.ic_menu_help)
@@ -2972,10 +2990,14 @@ public final class Launcher extends Activity
         }
     }
 
+    public int getCurrentOrientation() {
+        return getResources().getConfiguration().orientation;
+    }
+
     /** Maps the current orientation to an index for referencing orientation correct global icons */
     private int getCurrentOrientationIndexForGlobalIcons() {
         // default - 0, landscape - 1
-        switch (getResources().getConfiguration().orientation) {
+        switch (getCurrentOrientation()) {
         case Configuration.ORIENTATION_LANDSCAPE:
             return 1;
         default:
@@ -3086,7 +3108,7 @@ public final class Launcher extends Activity
         final SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         ComponentName activityName = searchManager.getGlobalSearchActivity();
-        if (activityName != null) {
+        if (activityName != null && mShowSearchBar) {
             int coi = getCurrentOrientationIndexForGlobalIcons();
             sGlobalSearchIcon[coi] = updateButtonWithIconFromExternalActivity(
                     R.id.search_button, activityName, R.drawable.ic_home_search_normal_holo,
@@ -3691,8 +3713,7 @@ public final class Launcher extends Activity
 
     public boolean isRotationEnabled() {
         boolean forceEnableRotation = doesFileExist(FORCE_ENABLE_ROTATION_PROPERTY);
-        boolean enableRotation = forceEnableRotation ||
-                getResources().getBoolean(R.bool.allow_rotation);
+        boolean enableRotation = forceEnableRotation || mAutoRotate;
         return enableRotation;
     }
     public void lockScreenOrientation() {
@@ -3712,6 +3733,8 @@ public final class Launcher extends Activity
                     }
                 }, mRestoreScreenOrientationDelay);
             }
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
         }
     }
 
@@ -3863,6 +3886,18 @@ public final class Launcher extends Activity
     public void dismissFolderCling(View v) {
         Cling cling = (Cling) findViewById(R.id.folder_cling);
         dismissCling(cling, Cling.FOLDER_CLING_DISMISSED_KEY, DISMISS_CLING_DURATION);
+    }
+
+    public boolean preferencesChanged() {
+        SharedPreferences prefs =
+            getSharedPreferences(PreferencesProvider.PREFERENCES_KEY, Context.MODE_PRIVATE);
+        boolean preferencesChanged = prefs.getBoolean(PreferencesProvider.PREFERENCES_CHANGED, false);
+        if (preferencesChanged) {
+            SharedPreferences.Editor editor = prefs.edit();
+                    editor.putBoolean(PreferencesProvider.PREFERENCES_CHANGED, false);
+                    editor.commit();
+        }
+        return preferencesChanged;
     }
 
     /**

@@ -152,7 +152,7 @@ s -->
     <!-- Noun, menu item used to show the system settings -->
     <string name="menu_settings">System settings</string>
     <!-- Noun, menu item used to show the launcher preferences -->
-    <string name="menu_preferences">Preferences</string>
+    <string name="menu_preferences">Launcher settings</string>
     <!-- Noun, menu item used to show help. [CHAR_LIMIT=none] -->
     <string name="menu_help">Help</string>
 
@@ -285,20 +285,15 @@ s -->
     <string name="preferences_title">Preferences</string>
     <!-- UI -->
     <string name="preferences_interface_title">Interface</string>
-    <!-- General -->
-    <string name="preferences_general_title">General</string>
 
     <!-- UI -->
     <!-- Homescreen -->
     <string name="preferences_interface_homescreen_title">Homescreen</string>
-
-    <!-- Drawer -->
-    <string name="preferences_interface_drawer_title">Drawer</string>
-
-    <!-- Dock -->
-    <string name="preferences_interface_dock_title">Dock</string>
-
-    <!-- Icons -->
-    <string name="preferences_interface_icons_title">Icons</string>
+    <string name="preferences_interface_homescreen_general_search_title">Search Bar</string>
+    <string name="preferences_interface_homescreen_general_search_summary">Enable persistent search bar</string>
+    <!-- General -->
+    <string name="preferences_interface_general_title">General</string>
+    <string name="preferences_interface_general_orientation_title">Auto-rotate</string>
+    <string name="preferences_interface_general_orientation_summary">Enable homescreen rotation</string>
 
 </resources>

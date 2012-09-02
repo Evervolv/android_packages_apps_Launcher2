@@ -21,28 +21,24 @@
         <PreferenceScreen android:key="ui_homescreen"
             android:title="@string/preferences_interface_homescreen_title">
 
-        </PreferenceScreen>
-
-        <!-- Drawer -->
-        <PreferenceScreen android:key="ui_drawer"
-            android:title="@string/preferences_interface_drawer_title">
-
-        </PreferenceScreen>
-
-        <!-- Dock -->
-        <PreferenceScreen android:key="ui_dock"
-            android:title="@string/preferences_interface_dock_title">
+            <CheckBoxPreference android:key="ui_homescreen_general_search"
+                android:title="@string/preferences_interface_homescreen_general_search_title"
+                android:summary="@string/preferences_interface_homescreen_general_search_summary"
+                android:defaultValue="true" />
 
         </PreferenceScreen>
 
-        <!-- Icons -->
-        <PreferenceScreen android:key="ui_icons"
-            android:title="@string/preferences_interface_icons_title">
+        <!--General-->
+        <PreferenceScreen android:key="ui_general"
+            android:title="@string/preferences_interface_general_title">
+
+            <CheckBoxPreference android:key="ui_general_orientation"
+                android:title="@string/preferences_interface_general_orientation_title"
+                android:summary="@string/preferences_interface_general_orientation_summary"
+                android:defaultValue="@bool/allow_rotation" />
 
         </PreferenceScreen>
+
     </PreferenceCategory>
 
-    <!-- General -->
-    <PreferenceCategory android:title="@string/preferences_general_title">
-    </PreferenceCategory>
 </PreferenceScreen>
