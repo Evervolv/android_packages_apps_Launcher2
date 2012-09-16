@@ -932,6 +932,12 @@ public class CellLayout extends ViewGroup {
         int numWidthGaps = mCountX - 1;
         int numHeightGaps = mCountY - 1;
 
+        if (LauncherApplication.isCellAdjustment()) {
+            mCellWidth = (widthSpecSize - mPaddingLeft - mPaddingRight) / mCountX;
+            mCellHeight = (heightSpecSize - mPaddingTop - mPaddingBottom) / mCountY;
+            mShortcutsAndWidgets.setCellDimensions(mCellWidth, mCellHeight, mWidthGap, mHeightGap);
+        }
+
         if (mOriginalWidthGap < 0 || mOriginalHeightGap < 0) {
             int hSpace = widthSpecSize - getPaddingLeft() - getPaddingRight();
             int vSpace = heightSpecSize - getPaddingTop() - getPaddingBottom();

@@ -35,6 +35,7 @@ public class LauncherApplication extends Application {
     public IconCache mIconCache;
     private static boolean sIsScreenLarge;
     private static float sScreenDensity;
+    private static boolean sAdjustCellLayout;
     private static int sLongPressTimeout = 300;
     private static final String sSharedPreferencesKey = "com.android.launcher2.prefs";
     WeakReference<LauncherProvider> mLauncherProvider;
@@ -46,6 +47,7 @@ public class LauncherApplication extends Application {
         // set sIsScreenXLarge and sScreenDensity *before* creating icon cache
         sIsScreenLarge = getResources().getBoolean(R.bool.is_large_screen);
         sScreenDensity = getResources().getDisplayMetrics().density;
+        sAdjustCellLayout = getResources().getBoolean(R.bool.adjust_cell_layout);
 
         mIconCache = new IconCache(this);
         mModel = new LauncherModel(this, mIconCache);
@@ -137,6 +139,10 @@ public class LauncherApplication extends Application {
 
     public static float getScreenDensity() {
         return sScreenDensity;
+    }
+
+    public static boolean isCellAdjustment() {
+        return sAdjustCellLayout;
     }
 
     public static int getLongPressTimeout() {
