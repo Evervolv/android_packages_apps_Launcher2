@@ -69,9 +69,9 @@
         launcher:packageName="com.evervolv.evtips"
         launcher:className="com.evervolv.evtips.StackWidgetProvider"
         launcher:screen="3"
-        launcher:x="2"
+        launcher:x="1"
         launcher:y="1"
-        launcher:spanX="3"
+        launcher:spanX="4"
         launcher:spanY="2" />
 
     <!-- Far-right screen [4] -->
